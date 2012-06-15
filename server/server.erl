@@ -1,7 +1,7 @@
 #!/usr/bin/env escript
 
 start_server() ->
-    Opts = [{packet, 0}, {reuseaddr, true}, {active, true}, {ip, {192,168,1,110}}],
+    Opts = [{packet, 0}, {reuseaddr, true}, {active, true}, {ip, {0,0,0,0}}],
     {ok, Listen} = gen_tcp:listen(20000, Opts),
     init_ets(),
     spawn(fun() -> connection_server(Listen) end),

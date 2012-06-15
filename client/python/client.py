@@ -9,11 +9,7 @@ import gevent
 from gevent.socket import wait_read
 
 PORT = 20000
-IP = '127.0.0.1'
-IP2 = '67.175.163.247'
-IP3 = '192.168.1.110'
 HOST = 'wayne.wallitt.com'
-MESSAGE = 'print;Fart'
 BUFSIZE = 2**10
 
 OP_REGISTER = 'register'
