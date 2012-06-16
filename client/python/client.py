@@ -14,17 +14,19 @@ BUFSIZE = 2**10
 
 OP_REGISTER = 'register'
 OP_SEND = 'send'
-
-if len(sys.argv) > 1:
-    message = sys.argv[1]
-else:
-    message = 'ADFASDFASDF'
+OP_PRESENCE = 'presence'
 
 def socket_reader(sock):
     while True:
         recvd = sock.recv(BUFSIZE)
-        sender, message = recvd.split(';')
-        print '{}: {}'.format(sender, message)
+        recvd= recvd.split(';')
+        if recvd[0].strip() == OP_PRESENCE:
+            print 'PRESENCE:'
+            for username in recvd[1:]:
+                print username
+        else:
+            username, message = recvd
+            print '{}: {}'.format(username, message)
 
 def client(sock):
     gevent.spawn(socket_reader, sock)
@@ -33,7 +35,10 @@ def client(sock):
         sys.stdout.flush()
         wait_read(sys.stdin.fileno())
         outbound_msg = sys.stdin.readline()
-        send_command = ';'.join((OP_SEND, outbound_msg))
+        if outbound_msg.strip() == OP_PRESENCE:
+            send_command = OP_PRESENCE + ';'
+        else:
+            send_command = ';'.join((OP_SEND, outbound_msg))
         sock.send(send_command)
 
 def startup():
